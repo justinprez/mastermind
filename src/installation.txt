@@ -1,0 +1,20 @@
+MASTERMIND INSTALLATION
+
+
+***
+To user Mastermind, users must install the Flutter SDK, Android Studio, and VS code.
+If you already have these depencies installed, follow howToRun.txt in this directory 
+and follow the instructions to run Mastermind.
+***
+
+------------------------------
+----    How to Install    ----
+------------------------------
+
+Mac OS
+
+	1. Visit https://flutter.dev/docs/get-started/install/macos and follow the instructions to install each dependency.
+
+Windows
+
+	1. Visit https://flutter.dev/docs/get-started/install/windows and follow the instructions to install each dependency.
