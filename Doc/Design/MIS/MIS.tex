@@ -1,0 +1,537 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{paralist}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{hhline}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{tabularx}
+\usepackage[normalem]{ulem}
+\usepackage{xcolor}
+
+\oddsidemargin 0mm
+\evensidemargin 0mm
+\textwidth 160mm
+\textheight 200mm
+\renewcommand\baselinestretch{1.0}
+
+\pagestyle {plain}
+\pagenumbering{arabic}
+
+\newcounter{stepnum}
+
+\usepackage{color}
+
+\newif\ifcomments\commentstrue
+
+\ifcomments
+\newcommand{\authornote}[3]{\textcolor{#1}{[#3 ---#2]}}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\else
+\newcommand{\authornote}[3]{}
+\newcommand{\todo}[1]{}
+\fi
+
+\newcommand{\wss}[1]{\authornote{blue}{SS}{#1}}
+
+\title{SE 3XA3: Module Interface Specification\\Mastermind}
+
+\author{Team 204, Trident Inc.
+		\\ Justin Prez, prezj
+		\\ Justin Rosner, rosnej1
+		\\ Harshil Modi, modih1
+}
+\begin {document}
+ 
+\maketitle
+
+This document shows the complete specification for the modules used for running and playing Mastermind.
+
+
+\newpage
+
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
+\midrule
+March 10, 2020 & Justin Prez, Justin Rosner, HarshiL Modi & Initial write-up of MIS document\\
+\textcolor{red}{April 5, 2020} & \textcolor{red}{Justin Rosner, Justin Prez, Harshil Modi} & \textcolor{red}{Revision 1 of MIS}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\newpage
+
+
+\section* {\sout{Game} Types Module}
+
+\subsection*{Module}
+
+GameTypes
+
+\subsection* {Uses}
+
+None
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+MAX\_ROWS = 10\\
+MAX\_COLUMNS = 4
+
+
+\subsubsection* {Exported Types}
+
+ColourT = \{red, blue, yellow, green, white, purple\}\\
+ClueT = \{correct, semicorrect, incorrect\}
+
+\subsubsection* {Exported Access Programs}
+
+None
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+None
+
+\subsubsection* {State Invariant}
+None
+
+\subsubsection* {Assumptions}
+For ClueT, correct indicates a guess of correct position and colour, semicorrect indicates a guess of correct colour but not correct position, and incorrect is a guess that does not match position or colour of the final code.
+
+
+\newpage
+
+\section* {Button \sout{ADT} Module}
+
+\subsection*{Template Module}
+
+ButtonT
+
+\subsection* {Uses}
+GameTypes
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+None
+
+\subsubsection* {Exported Types}
+ButtonT = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | l |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+ButtonT & ColourT, $\mathbb{R}$, $\mathbb{R}$  & ButtonT & InvalidPointException\\
+\hline
+get\_colour & & ColourT & \\
+\hline
+get\_column & & $\mathbb{R}$ & \\
+\hline
+get\_row & & $\mathbb{R}$ & \\
+\hline
+draw\_button & & & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+col: $\mathbb{R}$\\
+row: $\mathbb{R}$\\
+colour: $\text{ColourT}$
+
+\subsubsection* {Environment Variables}
+None
+
+\subsubsection* {State Invariant}
+$0\leq $ col $\leq \text{MAX\_COLUMNS}-1$\\
+$0\leq $ row $\leq \text{MAX\_ROWS}-1$
+
+\subsubsection* {Assumptions}
+The constructor ButtonT is called for each abstract object before any other access routine
+is called for that object. The constructor cannot be called on an existing object.
+
+\subsubsection* {Access Routine Semantics}
+
+ButtonT($x,y,c$): 
+\begin{itemize} 
+\item output: $\mathit{out} := \mathit{self} $
+\item transition: $col, row, colour := x, y, c$
+\item exception: $(\lnot(0\leq x\leq \text{MAX\_COLUMNS}-1) \lor \lnot(0\leq y\leq \text{MAX\_ROWS}-1)) \Rightarrow \text{InvalidPointException}$
+\end{itemize}
+
+\noindent get\_colour(): 
+\begin{itemize} 
+\item output: $\mathit{out} := colour$
+\item exception: None
+\end{itemize}
+
+\noindent get\_column(): 
+\begin{itemize}
+\item output: $\mathit{out} := col $
+\item exception: None
+\end{itemize}
+
+\noindent get\_row(): 
+\begin{itemize} 
+\item output: $\mathit{out} := row $
+\item exception: None
+\end{itemize}
+
+\noindent draw\_button(): 
+\begin{itemize} 
+
+\item output: None
+\item transition: Draw the Button to the screen with the colour specified by $colour$ at the coordinate $(col,row)$.
+\item exception: None
+\end{itemize}
+
+\newpage
+
+\section* {Game Board \sout{ADT} Module}
+
+\subsection*{Template Module}
+BoardT
+
+\subsection* {Uses}
+ButtonT\\
+GameTypes
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+None
+
+\subsubsection* {Exported Types}
+BoardT = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | l |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+BoardT & & BoardT & \\
+\hline
+draw\_board &  & BoardT & invalid\_argument \\
+\hline
+add\_button & ButtonT & & \\
+\hline
+add\_clue & ClueT & & \\
+\hline
+get\_buttons & & seq of ButtonT & \\
+\hline
+get\_clues & & seq of ClueT & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+buttons = seq of ButtonT\\
+clues = seq of ClueT
+
+\subsubsection* {Environment Variables}
+\sout{None}
+\textcolor{red}{Screen = ?}
+
+\subsubsection* {State Invariant}
+$0\leq |$buttons$| \leq \text{MAX\_ROWS} * \text{MAX\_COLUMNS}$\\
+$0\leq |$clues$| \leq \text{MAX\_ROWS} * \text{MAX\_COLUMNS}$\\
+
+\subsubsection* {Assumptions}
+The constructor BoardT is called for each abstract object before any other access routine is called for that object.  The constructor cannot be called on an existing object.
+
+\subsubsection* {Access Routine Semantics}
+
+BoardT():
+\begin{itemize}
+\item output: $\mathit{self}$
+\item transition: $\mathit{buttons},\mathit{clues} := \emptyset, \emptyset$
+\item exception: None
+\end{itemize}
+
+\noindent draw\_board():
+\begin{itemize}
+\item output: None
+\item transition: $\forall\  i \in [0..\text{MAX\_ROW}*\text{MAX\_COLUMNS} - 1] \cdot buttons[i].\text{draw\_button}() \land \text{draw\_clue} (clues[i], buttons[i].\text{get\_row}())$
+\item exception: $(\lnot(0\leq b\leq \text{MAX\_COLUMNS}*\text{MAX\_ROWS}) \lor \lnot(0\leq c\leq \text{MAX\_COLUMNS}*\text{MAX\_ROWS}) \Rightarrow \text{invalid\_argument}$
+\end{itemize}
+
+\noindent add\_button($b$):
+\begin{itemize}
+    \item output: None
+    \item transition: $\mathit{buttons} := buttons \ || <b>$
+    \item exception: None
+\end{itemize}
+
+\noindent add\_clue($c$):
+\begin{itemize}
+\item output: None
+\item transition: $\mathit{clues} := clues\ || <c>$
+\item exception: None
+\end{itemize}
+
+\noindent get\_buttons(): 
+\begin{itemize} 
+\item output: $\mathit{out} := buttons$
+\item exception: None
+\end{itemize}
+
+\noindent get\_clues(): 
+\begin{itemize} 
+\item output: $\mathit{out} := clues$
+\item exception: None
+\end{itemize}
+
+\subsection*{Local Functions}
+
+\noindent draw\_clue: $\text{ClueT}\times \mathbb{N} \rightarrow $ \# \textit{draws clue to screen}\\
+\noindent draw\_clue($c, r$) $\equiv$  \# \textit{ draw clue c to the board for row r}
+
+\newpage
+
+\section* {Menu Module}
+
+\subsection*{Module}
+Menu
+
+\subsection* {Uses}
+None
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+None
+\subsubsection* {Exported Types}
+None
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | l |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+draw\_menu &  &  &  \\
+\hline
+draw\_instructions & & & \\
+\hline
+
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+None
+
+\subsubsection* {Environment Variables}
+\sout{None}
+\textcolor{red}{Screen = ?}
+\subsubsection* {State Invariant}
+None
+
+
+\subsubsection* {Assumptions}
+None
+
+\subsubsection* {Access Routine Semantics}
+
+draw\_menu():
+\begin{itemize}
+\item output: None
+\item transition: Draw the menu to the screen with the proper text formatting and layout.
+\item exception: None
+\end{itemize}
+
+\noindent draw\_instructions(): 
+\begin{itemize} 
+\item output: None
+\item transition: Draw the instructions to the screen with the proper text formatting and layout.
+\item exception: None
+\end{itemize}
+
+\subsection*{Local Functions}
+None
+\newpage
+
+\section* {Game Board Controller}
+
+\subsection*{Module}
+GameBoardController
+
+\subsection* {Uses}
+BoardT
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+None
+
+\subsubsection* {Exported Types}
+GameStateT = \{win, lose, playing\}
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | l |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new\_game & & &\\
+\hline
+next\_move & ButtonT & GameStateT & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+win\_combo = seq of ButtonT\\
+board = BoardT\\
+num\_buttons = $\mathbb{N}$
+
+\subsubsection* {Environment Variables}
+None
+
+\subsubsection* {State Invariant}
+$|\text{winning\_combo}| = 4$
+
+\subsubsection* {Assumptions}
+
+
+\subsubsection* {Access Routine Semantics}
+
+\noindent new\_game():
+\begin{itemize}
+\item output: None
+\item transition: board, win\_combo, num\_buttons $:=$ BoardT(), generate\_combo(), 0
+\item exception: None
+\end{itemize}
+
+\noindent next\_move($b$):
+\begin{itemize}
+\item output: is\_end\_state()
+\item transition:
+\begin{itemize}
+    \item num\_buttons, board := num\_buttons $+\ 1$, board.add\_button($b$)
+    \item (num\_buttons $\% \ 4 = 0) \Rightarrow$ validate\_guess()
+    \item board.draw\_board()
+\end{itemize}
+\item exception: None
+\end{itemize}
+
+
+\subsection*{Local Functions}
+\sloppy \noindent is\_end\_state() $\equiv (\forall \ i \in [|\text{board.getClues()}|-4..\text{board.getClues()}|-1]\cdot (\text{num\_buttons} \% 4 = 0)\land (\text{board.getClues()[i]}=\text{correct})\Rightarrow \text{winning}) \lor ((\text{num\_buttons}=\text{MAX\_ROWS}\times\text{MAX\_COLUMNS})\land(\exists\ i \in [\text{board.getClues()}|-4..\text{board.getClues()}|-1]\cdot \text{board.getClues()[i]} \neq \text{correct})\Rightarrow \text{losing}) \lor ((\text{num\_buttons} \le \text{MAX\_ROWS}\times\text{MAX\_COLUMNS}) \land (\exists \ i \in [|\text{board.getClues()}|-4..\text{board.getClues()}|-1]\cdot (\text{board.getClues()[i]}\neq \text{correct}) \Rightarrow \text{playing})$
+\\
+
+\noindent validate\_guess() $\equiv \forall i \in [\text{num\_buttons}-4..\text{num\_buttons}-1] \cdot \big((\text{board.get\_buttons()[i].get\_col} = \text{win\_combo}[i\% 4]\text{.get\_col} \land \text{board.get\_buttons()[i].get\_colour} = \text{win\_combo}[i\% 4]\text{.get\_colour}) \Rightarrow \text{board.add\_clue(correct,board.get\_buttons()[i].get\_row}\big) \lor \big((\text{board.get\_buttons()[i].get\_col} \neq \text{win\_combo}[i\% 4]\text{.get\_col} \land \text{board.get\_buttons()[i].get\_colour} = \text{win\_combo[i\% 4].get\_colour}) \Rightarrow \text{board.add\_clue(semicorrect,board.get\_buttons()[i].get\_row}\big) \lor \big((\text{board.get\_buttons()[i].get\_col} \neq \text{win\_combo[i\% 4].get\_col} \land \text{board.get\_buttons()[i].get\_colour} \neq \text{win\_combo[i\% 4].get\_colour}) \Rightarrow \text{board.add\_clue(incorrect,board.get\_buttons()[i].get\_row}\big)$\\
+
+\noindent generate\_combo $\rightarrow$ seq of ButtonT\\ 
+\noindent generate\_combo() \# \textit{generate 4 buttons with random colours from ColourT, and then return them in a seq of ButtonT}
+
+\newpage
+
+
+\section* {Android Emulator \sout{Module}}
+
+\subsection*{Module}
+Main
+
+\subsection* {Uses}
+GameBoardController
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+None
+
+\subsubsection* {Exported Types}
+None
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | l |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+start\_up & & & \\
+\hline
+on\_screen\_press & & & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+game\_state = GameStateT
+
+\subsubsection* {Environment Variables}
+
+button\_input: \{button\_newGame, button\_instructions, button\_Red, button\_Blue, button\_Yellow, button\_Green, button\_White, button\_Purple  \}
+
+
+\subsubsection* {State Invariant}
+None
+
+\subsubsection* {Assumptions}
+The assumption for this module is that the start\_up is called upon the Android Emulator starting up. Using Flutter libraries, on\_screen\_press() will be called every time the user clicks a button on the screen.
+
+\subsubsection* {Access Routine Semantics}
+
+\noindent start\_up():
+\begin{itemize}
+\item output: None
+\item transition: draw\_menu()
+  
+\item exception: None
+\end{itemize}
+
+\noindent on\_screen\_press($but, game\_state$):
+\begin{itemize}
+    \item output: None
+    \item transition: 
+    \begin{tabular}{|p{3.5cm}|l|}
+\hhline{~|-|}
+\multicolumn{1}{r|}{} & \multicolumn{1}{l|}{$transistion$}\\
+\hhline{|-|-|}
+$but = button\_newGame$ & $new\_game()$\\
+\hhline{|-|-|}
+$but = button\_instructions$ & $draw\_instructions()$\\
+\hhline{|-|-|}
+$but = button\_Red$ & $game\_state := next\_move(but)$\\
+\hhline{|-|-|}
+$but = button\_Blue$ & $game\_state := next\_move(but)$\\
+\hhline{|-|-|}
+$but = button\_Yellow$ & $game\_state := next\_move(but)$\\
+\hhline{|-|-|}
+$but = button\_GREEN$ & $game\_state := next\_move(but)$\\
+\hhline{|-|-|}
+$but = button\_WHITE$ & $game\_state := next\_move(but)$\\
+\hhline{|-|-|}
+$but = button\_PURPLE$ & $game\_state := next\_move(but)$\\
+\hhline{|-|-|}
+\textcolor{red}{$but = invalid\_spot$} & \textcolor{red}{$game\_state := game\_state$}\\
+\hhline{|-|-|}
+\end{tabular}
+
+    \item exception: None
+\end{itemize}
+
+
+\subsection*{Local Functions}
+None
+\newpage
+
+\end {document}
