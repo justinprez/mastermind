@@ -1,0 +1,18 @@
+NOTE: ENSURE YOU HAVE ANDROID STUDIO, VS CODE, AND FLUTTER INSTALLED ON YOUR SYSTEM. 
+REFER TO installation.txt FOR INSTRUCTIONS ON HOW TO INSTALL.
+
+***
+Running Mastermind without receiving errors ensure you have correctly downloaded all dependencies.
+If you receive any errors upon running Mastermind, you have do not have the dependencies correctly installed.
+***
+
+-------------------------------
+----       How to Run      ----
+-------------------------------
+
+Mac OS or Windows
+	1. Download the "mastermind_gui" folder located in this directory.
+	2. Open this folder within VScode and navigate to the main.dart file in the "lib" folder.
+	3. Press 'F5' or click the command 'Run > Start Debugging'.
+    4. When prompted, select a phone emulator you have downloaded in Android studio
+    5. The game will be displayed to the emulator enabling you to play Mastermind.
